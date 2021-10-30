@@ -1,0 +1,10 @@
+{
+  "C_Cpp.intelliSenseEngine": "Tag Parser",
+  "files.associations": {
+    "*.html": "html",
+    "led_strip.h": "c",
+    "sdkconfig.h": "c",
+    "freertos.h": "c",
+    "task.h": "c"
+  }
+}
