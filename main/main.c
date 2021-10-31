@@ -11,20 +11,17 @@
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
 #include "driver/gpio.h"
-
-#define LED 2
+#include "dht11.h"
 
 void app_main(void)
 {
-    gpio_pad_select_gpio(LED);
-    gpio_set_direction(LED, GPIO_MODE_OUTPUT);
+    DHT11_init(GPIO_NUM_4);
 
-    int estado = 0;
-    while (true)
-    {
-        gpio_set_level(LED, estado);
+    while(1) {
+        printf("Temperature is %d \n", DHT11_read().temperature);
+        printf("Humidity is %d\n", DHT11_read().humidity);
+        printf("Status code is %d\n", DHT11_read().status);
         vTaskDelay(1000 / portTICK_PERIOD_MS);
-        estado = !estado;
     }
 }
 

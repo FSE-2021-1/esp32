@@ -5,6 +5,8 @@
     "led_strip.h": "c",
     "sdkconfig.h": "c",
     "freertos.h": "c",
-    "task.h": "c"
+    "task.h": "c",
+    "gpio.h": "c",
+    "dht11.h": "c"
   }
 }
