@@ -11,7 +11,7 @@
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
 #include "driver/gpio.h"
-#include "dht11.h"
+#include "../inc/dht11.h"
 
 void app_main(void)
 {

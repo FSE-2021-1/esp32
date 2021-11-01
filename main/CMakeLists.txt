@@ -1,5 +1,5 @@
-set(COMPONENT_SRCS "main.c")
-set(COMPONENT_ADD_INCLUDEDIRS ".")
+set(COMPONENT_SRCS "src/main.c")
+set(COMPONENT_ADD_INCLUDEDIRS "inc/")
 
 set(REQUIRES "esp32-DHT11")
 
