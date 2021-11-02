@@ -38,6 +38,17 @@ void conectadoWifi(void * params)
   }
 }
 
+void ler_temperatura(void * params) {
+  DHT11_init(GPIO_NUM_4);
+
+  while(1) {
+      printf("Temperature is %d \n", DHT11_read().temperature);
+      printf("Humidity is %d\n", DHT11_read().humidity);
+      printf("Status code is %d\n", DHT11_read().status);
+      vTaskDelay(1000 / portTICK_PERIOD_MS);
+  } 
+}
+
 void trataComunicacaoComServidor(void * params)
 {
   char mensagem[50];
@@ -68,14 +79,6 @@ void app_main(void){
 
     xTaskCreate(&conectadoWifi,  "Conexão ao MQTT", 4096, NULL, 1, NULL);
     xTaskCreate(&trataComunicacaoComServidor, "Comunicação com Broker", 4096, NULL, 1, NULL);
-
-    /* DHT11_init(GPIO_NUM_4);
-
-    while(1) {
-        printf("Temperature is %d \n", DHT11_read().temperature);
-        printf("Humidity is %d\n", DHT11_read().humidity);
-        printf("Status code is %d\n", DHT11_read().status);
-        vTaskDelay(1000 / portTICK_PERIOD_MS);
-    } */
+    xTaskCreate(&ler_temperatura, "Leitura de Temperatura", 4096, NULL, 1, NULL);
 }
 
