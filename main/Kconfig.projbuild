@@ -17,4 +17,10 @@ menu "Configuração do Wifi Configuration"
         default 5
         help
             Configure o valor máximo de tentativas de conexão.
+
+    config ESP_MQTT_HOST
+        string "Endereço do servidor MQTT"
+        default "mqtt://mqtt.eclipseprojects.io"
+        help
+            Endereço do servidor MQTT.
 endmenu

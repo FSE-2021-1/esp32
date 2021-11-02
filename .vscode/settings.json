@@ -9,6 +9,7 @@
     "gpio.h": "c",
     "dht11.h": "c",
     "esp_log.h": "c",
-    "semphr.h": "c"
+    "semphr.h": "c",
+    "esp_http_client.h": "c"
   }
 }
