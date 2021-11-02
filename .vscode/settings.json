@@ -7,6 +7,8 @@
     "freertos.h": "c",
     "task.h": "c",
     "gpio.h": "c",
-    "dht11.h": "c"
+    "dht11.h": "c",
+    "esp_log.h": "c",
+    "semphr.h": "c"
   }
 }
