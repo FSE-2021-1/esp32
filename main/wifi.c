@@ -50,6 +50,14 @@ static void event_handler(void* arg, esp_event_base_t event_base,
     }
 }
 
+char * get_mac_address(){
+    uint8_t mac[6];
+    esp_read_mac(mac, ESP_MAC_WIFI_STA);
+    char * mac_address = malloc(18);
+    sprintf(mac_address, "%02x:%02x:%02x:%02x:%02x:%02x", mac[0], mac[1], mac[2], mac[3], mac[4], mac[5]);
+    return mac_address;
+}
+
 void wifi_start(){
 
     s_wifi_event_group = xEventGroupCreate();

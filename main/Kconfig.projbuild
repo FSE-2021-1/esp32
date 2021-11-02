@@ -23,4 +23,10 @@ menu "Configuração do Wifi Configuration"
         default "mqtt://mqtt.eclipseprojects.io"
         help
             Endereço do servidor MQTT.
+
+    config ESP_MATRICULA
+        string "Matrícula do usuário"
+        default "123456789"
+        help
+            Matrícula do usuário.
 endmenu

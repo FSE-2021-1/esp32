@@ -22,6 +22,7 @@
 #include "wifi.h"
 #include "http_client.h"
 #include "mqtt.h"
+#include "register.h"
 
 xSemaphoreHandle conexaoWifiSemaphore;
 xSemaphoreHandle conexaoMQTTSemaphore;
@@ -76,8 +77,10 @@ void app_main(void){
     conexaoWifiSemaphore = xSemaphoreCreateBinary();
     conexaoMQTTSemaphore = xSemaphoreCreateBinary();
     wifi_start();
-
     xTaskCreate(&conectadoWifi,  "Conexão ao MQTT", 4096, NULL, 1, NULL);
+
+
+    register_device();
     xTaskCreate(&trataComunicacaoComServidor, "Comunicação com Broker", 4096, NULL, 1, NULL);
     xTaskCreate(&ler_temperatura, "Leitura de Temperatura", 4096, NULL, 1, NULL);
 }
