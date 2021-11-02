@@ -23,5 +23,5 @@ void register_device() {
     ESP_LOGI(TAG, "Send message to topic: %s", topic);
     ESP_LOGI(TAG, "Payload: %s", payload);
     mqtt_envia_mensagem(topic, payload);
-    mqtt_subscribe(topic);
+    mqtt_topic_subscribe(topic);
 }
