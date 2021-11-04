@@ -2,15 +2,8 @@
   "C_Cpp.intelliSenseEngine": "Tag Parser",
   "files.associations": {
     "*.html": "html",
-    "led_strip.h": "c",
-    "sdkconfig.h": "c",
-    "freertos.h": "c",
-    "task.h": "c",
     "gpio.h": "c",
-    "dht11.h": "c",
-    "esp_log.h": "c",
-    "semphr.h": "c",
-    "esp_http_client.h": "c",
-    "*.inc": "c"
+    "esp_types.h": "c",
+    "task.h": "c"
   }
 }

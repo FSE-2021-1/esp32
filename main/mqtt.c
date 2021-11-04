@@ -17,6 +17,7 @@
 
 #include "esp_log.h"
 #include "mqtt_client.h"
+#include "mqtt_router.h"
 
 #include "mqtt.h"
 
@@ -52,9 +53,8 @@ static esp_err_t mqtt_event_handler_cb(esp_mqtt_event_handle_t event)
             ESP_LOGI(TAG, "MQTT_EVENT_PUBLISHED, msg_id=%d", event->msg_id);
             break;
         case MQTT_EVENT_DATA:
-            ESP_LOGI(TAG, "MQTT_EVENT_DATA");
-            printf("TOPIC=%.*s\r\n", event->topic_len, event->topic);
-            printf("DATA=%.*s\r\n", event->data_len, event->data);
+            ESP_LOGI(TAG, "MQTT_EVENT_DATA, Topic: %s", event->topic);
+            mqtt_router_route(event->topic_len, event->topic, event->data_len, event->data);
             break;
         case MQTT_EVENT_ERROR:
             ESP_LOGI(TAG, "MQTT_EVENT_ERROR");
