@@ -8,7 +8,7 @@
 
 #define MATR CONFIG_ESP_MATRICULA
 
-void register_device() {
+void register_device(void * params) {
     char * mac;
     // TODO check if register is already done
     mac = get_mac_address();

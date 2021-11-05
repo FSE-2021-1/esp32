@@ -10,7 +10,9 @@
 #include "esp_event.h"
 #include "esp_http_client.h"
 #include "esp_log.h"
+#include "cJSON.h"
 
+#include "global.h"
 #include "wifi.h"
 #include "http_client.h"
 #include "mqtt.h"
@@ -31,31 +33,6 @@ void conectadoWifi(void * params)
   }
 }
 
-void ler_temperatura(void * params) {
-  DHT11_init(GPIO_NUM_4);
-
-  while(1) {
-      printf("Temperature is %d \n", DHT11_read().temperature);
-      printf("Humidity is %d\n", DHT11_read().humidity);
-      printf("Status code is %d\n", DHT11_read().status);
-      vTaskDelay(1000 / portTICK_PERIOD_MS);
-  } 
-}
-
-void trataComunicacaoComServidor(void * params)
-{
-  char mensagem[50];
-  if(xSemaphoreTake(conexaoMQTTSemaphore, portMAX_DELAY))
-  {
-    while(true)
-    {
-       float temperatura = 20.0 + (float)rand()/(float)(RAND_MAX/10.0);
-       sprintf(mensagem, "temperatura1: %f", temperatura);
-       mqtt_envia_mensagem("sensores/temperatura", mensagem);
-       vTaskDelay(3000 / portTICK_PERIOD_MS);
-    }
-  }
-}
 
 void app_main(void){
     // Inicializa o NVS
@@ -73,7 +50,5 @@ void app_main(void){
 
 
     register_device();
-    xTaskCreate(&trataComunicacaoComServidor, "Comunicação com Broker", 4096, NULL, 1, NULL);
-    xTaskCreate(&ler_temperatura, "Leitura de Temperatura", 4096, NULL, 1, NULL);
 }
 
