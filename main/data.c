@@ -47,6 +47,8 @@ void ler_sensor(void * params) {
 
       if (ret.status == DHT11_OK) {
         ESP_LOGI(TAG, "Read from sensor status: OK");
+        ESP_LOGI(TAG, "Temperature: %d C", ret.temperature);
+        ESP_LOGI(TAG, "Humidity: %d %%", ret.humidity);
         count++;
         temp += ret.temperature;
         hum += ret.humidity;
