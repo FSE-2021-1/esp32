@@ -17,6 +17,7 @@
 #include "http_client.h"
 #include "mqtt.h"
 #include "register.h"
+#include "pwm.h"
 
 xSemaphoreHandle conexaoWifiSemaphore;
 xSemaphoreHandle conexaoMQTTSemaphore;
@@ -48,7 +49,7 @@ void app_main(void){
     wifi_start();
     xTaskCreate(&conectadoWifi,  "Conexão ao MQTT", 4096, NULL, 1, NULL);
 
-
+    init_pwm();
     register_device();
 }
 

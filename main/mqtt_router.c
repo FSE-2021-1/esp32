@@ -8,6 +8,8 @@
 #include <string.h>
 #include "global.h"
 #include "data.h"
+#include "mqtt.h"
+#include "pwm.h"
 
 #define MATR CONFIG_ESP_MATRICULA
 
@@ -40,7 +42,28 @@ void route_mqtt_register(int payload_len, char *payload) {
     g_base_topic_len = base_topic_len+1;
     ESP_LOGI(TAG, "Registered!! Base topic: %s", base_topic);
 
+    // Subscribe to base topic + 'estado'
+    char *topic = malloc(base_topic_len + strlen("estado") + 1);
+    strcpy(topic, base_topic);
+    strcat(topic, "estado");
+    ESP_LOGI(TAG, "Subscribing to %s", topic);
+    mqtt_topic_subscribe(topic);
+    free(topic);
+
     xTaskCreate(&ler_sensor, "Leitura DHT", 4096, NULL, 2, NULL); 
+}
+
+void route_mqtt_state(int topic_len, char *topic, int payload_len, char *payload) {
+    // get state from payload json
+    cJSON *root = cJSON_Parse(payload);
+    cJSON *state = cJSON_GetObjectItemCaseSensitive(root, "state");
+    if (state == NULL) {
+        ESP_LOGE(TAG, "Error: state not found\n");
+        cJSON_Delete(root);
+        return;
+    }
+    int state_int = state->valueint;
+    set_pwm_value(state_int > 255 ? 255 : (state_int < 0 ? 0 : state_int));
 }
 
 void mqtt_router_route(int topic_len, char *topic, int payload_len, char *payload) {
@@ -50,6 +73,17 @@ void mqtt_router_route(int topic_len, char *topic, int payload_len, char *payloa
         if (strncmp(topic, "fse2021/" MATR "/dispositivos/", strlen("fse2021/" MATR "/dispositivos/")) == 0) {
             if (strncmp(topic + strlen("fse2021/" MATR "/dispositivos/"), mac_address, strlen(mac_address)) == 0) {
                 route_mqtt_register(payload_len, payload);
+            }
+        }
+    }
+
+    // check if topic match with fse2021/<matricula>/<local>/estado
+    if (topic_len == strlen("fse2021") + strlen(MATR) + g_local_len + strlen("/estado") + 1) {
+        if (strncmp(topic, "fse2021/" MATR "/", strlen("fse2021/" MATR "/")) == 0) {
+            if (strncmp(topic + strlen("fse2021/" MATR "/"), g_local, g_local_len) == 0) {
+                if (strncmp(topic + strlen("fse2021/" MATR "/") + g_local_len, "/estado", strlen("/estado")) == 0) {
+                    route_mqtt_state(topic_len, topic, payload_len, payload);
+                }
             }
         }
     }

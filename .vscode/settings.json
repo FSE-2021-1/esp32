@@ -4,6 +4,8 @@
     "*.html": "html",
     "gpio.h": "c",
     "esp_types.h": "c",
-    "task.h": "c"
+    "task.h": "c",
+    "*.tcc": "c",
+    "*.ipp": "c"
   }
 }
