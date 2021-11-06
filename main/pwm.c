@@ -44,7 +44,7 @@ void init_pwm() {
         .speed_mode = LEDC_LOW_SPEED_MODE,
         .channel = LEDC_CHANNEL_0,
         .timer_sel = LEDC_TIMER_0,
-        .duty = 20,
+        .duty = 0,
         .hpoint = 0
     };
 
