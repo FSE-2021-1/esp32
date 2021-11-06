@@ -56,9 +56,9 @@ void route_mqtt_register(int payload_len, char *payload) {
 void route_mqtt_state(int topic_len, char *topic, int payload_len, char *payload) {
     // get state from payload json
     cJSON *root = cJSON_Parse(payload);
-    cJSON *state = cJSON_GetObjectItemCaseSensitive(root, "state");
+    cJSON *state = cJSON_GetObjectItemCaseSensitive(root, "out");
     if (state == NULL) {
-        ESP_LOGE(TAG, "Error: state not found\n");
+        ESP_LOGI(TAG, "output state not found\n");
         cJSON_Delete(root);
         return;
     }
