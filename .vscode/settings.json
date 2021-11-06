@@ -6,6 +6,7 @@
     "esp_types.h": "c",
     "task.h": "c",
     "*.tcc": "c",
-    "*.ipp": "c"
+    "*.ipp": "c",
+    "*.inc": "c"
   }
 }

@@ -50,7 +50,11 @@ void route_mqtt_register(int payload_len, char *payload) {
     mqtt_topic_subscribe(topic);
     free(topic);
 
-    xTaskCreate(&ler_sensor, "Leitura DHT", 4096, NULL, 2, NULL); 
+    if(g_dht_task_handle != NULL) {
+        vTaskDelete(g_dht_task_handle);
+    }
+
+    xTaskCreate(&ler_sensor, "Leitura DHT", 4096, NULL, 2, &g_dht_task_handle); 
 }
 
 void route_mqtt_state(int topic_len, char *topic, int payload_len, char *payload) {
