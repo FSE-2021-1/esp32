@@ -29,8 +29,9 @@ xQueueHandle interruption_queue;
 void send_message (int value) {
     cJSON *root = cJSON_CreateObject();
     // cJSON add bool value
-    ESP_LOGI(TAG, "Sending message state: %d\n", value);
-    cJSON_AddBoolToObject(root, "value", value == 1 ? true : false);
+    // BUGFIX 
+    printf("%d\n", value);
+    cJSON_AddBoolToObject(root, "in", value == 0 ? true : false);
     // send message base topic + "/estado"
     char * topic = malloc(g_base_topic_len + strlen("estado") + 1);
     if (g_base_topic == NULL) {

@@ -3,8 +3,4 @@
 
 void init_button();
 
-void handle_button_interruption(void *params);
-
-static void IRAM_ATTR gpio_isr_handler(void *args);
-
 #endif

@@ -51,8 +51,9 @@ void app_main(void){
     xTaskCreate(&conectadoWifi,  "Conexão ao MQTT", 4096, NULL, 1, NULL);
 
     init_pwm();
+    init_nvs();
     init_button();
-    
+
     register_device();
 }
 
