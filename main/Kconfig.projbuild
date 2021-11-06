@@ -29,4 +29,10 @@ menu "Configuração de Ambiente da ESP32"
         default "123456789"
         help
             Matrícula do usuário.
+
+    config ESP_TOUCH
+        bool "Habilitar ou desabilitar o sensor de toque"
+        default false
+        help
+            Habilitar ou desabilitar o sensor de toque.
 endmenu

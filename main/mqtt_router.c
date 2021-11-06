@@ -10,6 +10,7 @@
 #include "data.h"
 #include "mqtt.h"
 #include "pwm.h"
+#include "init.h"
 
 #define MATR CONFIG_ESP_MATRICULA
 
@@ -30,31 +31,16 @@ void route_mqtt_register(int payload_len, char *payload) {
     ESP_LOGI(TAG, "Local: %s", local_str);
     g_local = local_str;
     g_local_len = local_len;
-    
-    char *prefix = "fse2021/" MATR "/";
-    int base_topic_len = strlen(prefix) + local_len;
-    char *base_topic = malloc(base_topic_len + 2);
-    strcpy(base_topic, prefix);
-    strcat(base_topic, local_str);
-    base_topic[base_topic_len] = '/';
-    base_topic[base_topic_len+1] = '\0';
-    g_base_topic = base_topic;
-    g_base_topic_len = base_topic_len+1;
-    ESP_LOGI(TAG, "Registered!! Base topic: %s", base_topic);
-
-    // Subscribe to base topic + 'estado'
-    char *topic = malloc(base_topic_len + strlen("estado") + 1);
-    strcpy(topic, base_topic);
-    strcat(topic, "estado");
-    ESP_LOGI(TAG, "Subscribing to %s", topic);
-    mqtt_topic_subscribe(topic);
-    free(topic);
 
     if(g_dht_task_handle != NULL) {
         vTaskDelete(g_dht_task_handle);
     }
-
-    xTaskCreate(&ler_sensor, "Leitura DHT", 4096, NULL, 2, &g_dht_task_handle); 
+    
+    // save local in nvs flash
+    nvs_set_str(g_nvs, "local", local_str);
+    nvs_commit(g_nvs);
+    
+    init_topics();
 }
 
 void route_mqtt_state(int topic_len, char *topic, int payload_len, char *payload) {
@@ -62,7 +48,6 @@ void route_mqtt_state(int topic_len, char *topic, int payload_len, char *payload
     cJSON *root = cJSON_Parse(payload);
     cJSON *state = cJSON_GetObjectItemCaseSensitive(root, "out");
     if (state == NULL) {
-        ESP_LOGI(TAG, "output state not found\n");
         cJSON_Delete(root);
         return;
     }
@@ -82,7 +67,7 @@ void mqtt_router_route(int topic_len, char *topic, int payload_len, char *payloa
     }
 
     // check if topic match with fse2021/<matricula>/<local>/estado
-    if (topic_len == strlen("fse2021") + strlen(MATR) + g_local_len + strlen("/estado") + 1) {
+    if (topic_len == strlen("fse2021/") + strlen(MATR) + g_local_len + strlen("/estado") + 1) {
         if (strncmp(topic, "fse2021/" MATR "/", strlen("fse2021/" MATR "/")) == 0) {
             if (strncmp(topic + strlen("fse2021/" MATR "/"), g_local, g_local_len) == 0) {
                 if (strncmp(topic + strlen("fse2021/" MATR "/") + g_local_len, "/estado", strlen("/estado")) == 0) {
