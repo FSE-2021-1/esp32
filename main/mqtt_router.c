@@ -63,6 +63,7 @@ void route_mqtt_state(int topic_len, char *topic, int payload_len, char *payload
         return;
     }
     int state_int = state->valueint;
+    printf("state: %d\n", state_int);
     set_pwm_value(state_int > 255 ? 255 : (state_int < 0 ? 0 : state_int));
 }
 
@@ -78,7 +79,7 @@ void mqtt_router_route(int topic_len, char *topic, int payload_len, char *payloa
     }
 
     // check if topic match with fse2021/<matricula>/<local>/estado
-    if (topic_len == strlen("fse2021") + strlen(MATR) + g_local_len + strlen("/estado") + 1) {
+    if (topic_len == strlen("fse2021/") + strlen(MATR) + g_local_len + strlen("/estado") + 1) {
         if (strncmp(topic, "fse2021/" MATR "/", strlen("fse2021/" MATR "/")) == 0) {
             if (strncmp(topic + strlen("fse2021/" MATR "/"), g_local, g_local_len) == 0) {
                 if (strncmp(topic + strlen("fse2021/" MATR "/") + g_local_len, "/estado", strlen("/estado")) == 0) {
