@@ -21,8 +21,8 @@ void route_mqtt_register(int payload_len, char *payload) {
     ESP_LOGI(TAG, "Registering...\n");
     cJSON *root = cJSON_Parse(payload);
     cJSON *is_unregister = cJSON_GetObjectItemCaseSensitive(root, "unregister");
-    if(is_unregister->type == cJSON_True) {
-        ESP_LOGI(TAG, "Unsubscribing...\n");
+    if(is_unregister != NULL && is_unregister->type == cJSON_True) {
+        ESP_LOGI(TAG, "Unregistering...\n");
         unregister();
         cJSON_Delete(root);
         return;
