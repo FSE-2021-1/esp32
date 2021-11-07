@@ -11,6 +11,7 @@
 #include "mqtt.h"
 #include "pwm.h"
 #include "init.h"
+#include "register.h"
 
 #define MATR CONFIG_ESP_MATRICULA
 
@@ -19,6 +20,13 @@
 void route_mqtt_register(int payload_len, char *payload) {
     ESP_LOGI(TAG, "Registering...\n");
     cJSON *root = cJSON_Parse(payload);
+    cJSON *is_unregister = cJSON_GetObjectItemCaseSensitive(root, "unregister");
+    if(is_unregister->type == cJSON_True) {
+        ESP_LOGI(TAG, "Unsubscribing...\n");
+        unregister();
+        cJSON_Delete(root);
+        return;
+    }
     cJSON *local = cJSON_GetObjectItemCaseSensitive(root, "local");
     if (local == NULL) {
         ESP_LOGE(TAG, "Error: local not found\n");
@@ -33,7 +41,13 @@ void route_mqtt_register(int payload_len, char *payload) {
     g_local_len = local_len;
 
     if(g_dht_task_handle != NULL) {
+        // changing local, so we need to stop the task
         vTaskDelete(g_dht_task_handle);
+        // and unsubscribe older topic
+        char *topic = malloc(g_base_topic_len + 1);
+        strcpy(topic, g_base_topic);
+        topic[g_base_topic_len] = '+';
+        mqtt_topic_unsubscribe(topic);
     }
     
     // save local in nvs flash

@@ -3,4 +3,6 @@
 
 void register_device();
 
+void unregister();
+
 #endif

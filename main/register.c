@@ -2,6 +2,8 @@
 #include <string.h>
 #include "register.h"
 #include "nvs_flash.h"
+#include "freertos/FreeRTOS.h"
+#include "freertos/task.h"
 #include "esp_log.h"
 #include "esp_err.h"
 #include "mqtt.h"
@@ -53,3 +55,23 @@ void register_device(void * params) {
     mqtt_envia_mensagem(topic, payload);
     mqtt_topic_subscribe(topic);
 }
+
+void unregister () {
+    // clear global variables
+    free(g_local);
+    g_local = NULL;
+    g_local_len = 0;
+    free(g_base_topic);
+    g_base_topic = NULL;
+    g_base_topic_len = 0;
+    
+    // clear nvs
+    nvs_erase_all(g_nvs);
+
+    // clear tasks
+    vTaskDelete(g_dht_task_handle);
+    g_dht_task_handle = NULL;
+
+    // clear mqtt
+    mqtt_start();
+}   

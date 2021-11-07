@@ -92,3 +92,8 @@ void mqtt_topic_subscribe(char * topico){
     int message_id = esp_mqtt_client_subscribe(client, topico, 0);
     ESP_LOGI(TAG, "Subscrito, ID: %d", message_id);
 }
+
+void mqtt_topic_unsubscribe(char * topico){
+    int message_id = esp_mqtt_client_unsubscribe(client, topico);
+    ESP_LOGI(TAG, "Unsubscrito, ID: %d", message_id);
+}
